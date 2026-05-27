@@ -2,7 +2,7 @@
 
 ### 编码器与解码器（Encoder & Decoder）
 
-![image.png](Large%20Language%20Models%20(LLM)%20&%20Neural%20Language%20Proc/image.png)
+![image.png](/Transformer架构图.png)
 
 - 编码器（左边）：
     - 输入序列数据，Embedding词向量，Position Encoding位置编码（正余弦函数）;
@@ -30,9 +30,9 @@
             - 将语义向量空间映射到词汇表Vocabulary（即Embedding的逆向操作）
             - 全连接层计算方法
             
-            $$
-            DecoderOut\times W_{linear}+B_{linear}
-            $$
+$$
+DecoderOut\times W_{linear}+B_{linear}
+$$
             
             - （其中W_linear词汇表权重矩阵尺寸为（token_dim, word_size)，B_linear词汇表偏置向量尺寸为word_size）
         - 词汇表映射完成后得到词汇表每个词的原始分数（该分数表示模型生成时，模型觉得下一个位置要生成某个词的相对可能性（即概率分布）
@@ -44,19 +44,19 @@
     - Layer Norm：将batch中每个token的各维向量作归一化（不贯穿batch），并且是水平方向
         - Layer Norm计算公式
             
-            $$
-            LayerNorm(x)=\frac{(x-\mu)}{\sqrt{(\sigma ^2 + \epsilon)}}*\gamma + \beta
-            $$
-            
-            $$
-            （其中\epsilon 是防止分母为0的常数; \gamma(缩放因子) 和\beta(偏置) 为模型学习参数）
-            $$
+$$
+LayerNorm(x)=\frac{(x-\mu)}{\sqrt{(\sigma ^2 + \epsilon)}}*\gamma + \beta
+$$
+
+$$
+（其中\epsilon 是防止分母为0的常数; \gamma(缩放因子) 和\beta(偏置) 为模型学习参数）
+$$
             
     - Batch Norm：将每个batch的张量对应位置的数值作归一化（贯穿batch）
 
 ### 注意力机制（Attention Mechanism）
 
-![image.png](Large%20Language%20Models%20(LLM)%20&%20Neural%20Language%20Proc/image%201.png)
+![image.png](注意力机制.png)
 
 - （单头）注意力机制：
     - 当数据预处理（Embedding和Position Encoding）完成后，序列数据输入注意力机制，
@@ -64,9 +64,9 @@
         - 其中权重矩阵W_Q、W_K、W_V是模型需要学习和更新迭代的参数，使用Xaiver初始化
     - 然后Q矩阵与K矩阵的转置做矩阵乘法后进行缩放（缩放因子1/sqrt(d_k)）得到注意力分数（K矩阵特征维度的平方根，以防止梯度饱和），缩放后使用softmax进行归一化得到注意力权重（使得序列中每个token对所有token的注意力权重和为1），归一化后的结果与V矩阵做矩阵乘法，得到注意力输出
         
-        $$
-        Attention=softmax(\frac{QK^T}{\sqrt{d_k}}) \cdot V
-        $$
+$$
+Attention=softmax(\frac{QK^T}{\sqrt{d_k}}) \cdot V
+$$
         
         - softmax使用注意：因为计算的是自然底数的指数，指数需要控制（指数很大导致数值溢出），要求输入指数数值减去最大值来防止溢出
     - 最后与另一路残差连接直通的输入数据X进行Add（求和）和Norm（归一化）得到最终注意力输出，并输入前馈神经网络
@@ -77,9 +77,9 @@
         - 头数必须是能被权重矩阵特征维度整除，（这个分割过程称为线性映射到向量子空间）
     - 随后输入数据X与分割后的权重矩阵做矩阵乘法得到多组Q、K、V三个矩阵，后续多组Q矩阵和K矩阵的转置做矩阵乘法（GPU并行计算）再进行缩放（缩放因子1/sqrt(d_k)）和归一化（softmax）再和V矩阵做矩阵乘法后得到四维张量（batch_size, heads_num, token_num_in_seq, token_dim）
         
-        $$
-        Attention=softmax(\frac{QK^T}{\sqrt{d_k}}) \cdot V
-        $$
+$$
+Attention=softmax(\frac{QK^T}{\sqrt{d_k}}) \cdot V
+$$
         
         - 由于Transformer注意力模块后续连接的前馈神经网络需要三维张量，需要将四维转换回三维
             - 转换方式：对多组Q、K、V三矩阵分别进行水平拼接（concatenate），最终形成（batch_size, token_num_in_seq, heads_num*token_dim）
@@ -96,9 +96,9 @@
         - 矩阵元素：有效词向量部分为0，padding填充0向量为1（也可使用布尔值）
     - 注意力计算公式更新
         
-        $$
-        Attention=softmax(\frac{QK^T}{\sqrt{d_k}}+PM*-inf)\cdot V
-        $$
+$$
+Attention=softmax(\frac{QK^T}{\sqrt{d_k}}+PM*-inf)\cdot V
+$$
         
 - 解码器Mask：
     - 训练时掩盖住真实标签的未来信息（因果掩码），推理时直接将输出的token再输入解码器（仍使用因果掩码）
@@ -106,9 +106,9 @@
         - 矩阵元素：对角线及以下元素为0，对角线以上为1（也可使用布尔值）
     - 注意力计算公式更新
         
-        $$
-        Attention=softmax(\frac{QK^T}{\sqrt{d_k}}+CM*-inf)\cdot V
-        $$
+$$
+Attention=softmax(\frac{QK^T}{\sqrt{d_k}}+CM*-inf)\cdot V
+$$
         
 - 编码器和解码器掩码矩阵融合：
     - 编码器的填充掩码矩阵和解码器的因果掩码矩阵融合需要对齐维度（自动扩展序列长度和特征维度，两者相加PM+CM，最终矩阵尺寸仍是（batch_size，heads，seq_len，seq_len）
@@ -122,13 +122,13 @@
     - 函数计算完成后直接和原词向量求和，这样词向量包含了位置信息
     - 函数计算公式：
     
-    $$
-    SinPE_{(pos,2i)}= sin(pos \cdot 10000^{-\frac{2i}{d_{model}}})=sin(pos \cdot exp(-\frac{i*log(10000)}{d_{model}}))
-    $$
+$$
+SinPE_{(pos,2i)}= sin(pos \cdot 10000^{-\frac{2i}{d_{model}}})=sin(pos \cdot exp(-\frac{i*log(10000)}{d_{model}}))
+$$
     
-    $$
-    CosPE_{(pos,2i+1)}= cos(pos \cdot 10000^{-\frac{2i}{d_{model}}})=cos(pos \cdot exp(-\frac{i*log(10000)}{d_{model}}))
-    $$
+$$
+CosPE_{(pos,2i+1)}= cos(pos \cdot 10000^{-\frac{2i}{d_{model}}})=cos(pos \cdot exp(-\frac{i*log(10000)}{d_{model}}))
+$$
     
 
 ### 大模型训练模式（Training）
