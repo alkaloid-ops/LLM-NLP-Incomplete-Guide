@@ -34,7 +34,7 @@
 - SEP：句子分割符
 - MASK：掩码位置符，不给模型看到的Token，并进行替换
 - PAD：填充Padding符，用于对齐不同序列的长度
-- "<s>"和"</s>"：序列（句子）的开始与结束标记，=SOS和EOS
+- &lt;s&gt;和&lt;/s&gt：序列（句子）的开始与结束标记，=SOS和EOS
 - BOS和EOS：生成式模型的开始结束标记（表示文本生成的开始和结束）
 
 ## Embedding Algorithm
