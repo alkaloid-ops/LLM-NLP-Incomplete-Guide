@@ -34,7 +34,7 @@ $$
 DecoderOut\times W_{linear}+B_{linear}
 $$
             
-            - （其中W_linear词汇表权重矩阵尺寸为（token_dim, word_size)，B_linear词汇表偏置向量尺寸为word_size）
+        - （其中W_linear词汇表权重矩阵尺寸为（token_dim, word_size)，B_linear词汇表偏置向量尺寸为word_size）
         - 词汇表映射完成后得到词汇表每个词的原始分数（该分数表示模型生成时，模型觉得下一个位置要生成某个词的相对可能性（即概率分布）
         - 最终使用softmax将这些分数归一化（将分数转换为标准概率，使其满足总概率和为1的概率定理）
         - 权重共享：最终映射到词汇表的权重矩阵（也就是神经网络全连接线性层的权重参数矩阵）和输入时embedding操场的权重参数矩阵共享
@@ -82,8 +82,8 @@ Attention=softmax(\frac{QK^T}{\sqrt{d_k}}) \cdot V
 $$
         
         - 由于Transformer注意力模块后续连接的前馈神经网络需要三维张量，需要将四维转换回三维
-            - 转换方式：对多组Q、K、V三矩阵分别进行水平拼接（concatenate），最终形成（batch_size, token_num_in_seq, heads_num*token_dim）
-            - 如Q矩阵为（batch_size, 8, token_num_in_seq, 64）水平拼接后回到（batch_size, token_num_in_seq, 8*64=512）
+        - 转换方式：对多组Q、K、V三矩阵分别进行水平拼接（concatenate），最终形成（batch_size, token_num_in_seq, heads_num*token_dim）
+        - 如Q矩阵为（batch_size, 8, token_num_in_seq, 64）水平拼接后回到（batch_size, token_num_in_seq, 8*64=512）
     - 后续将与另一路残差连接直通的输入数据X进行Add（求和）和Norm（归一化）得到最终注意力输出，并输入前馈神经网络
 - 自注意力机制：单头注意力机制只关注序列数据编码后，序列中单个token和自己所在序列中所有token、两两一对之间的重要性（相关性）（包含自己与自己的相关性）
 - 交叉注意力机制：交叉注意力机制关注输入序列某一token和输出序列某一token两两一对的相关性（遍历两组序列中的所有token的两两组合）
