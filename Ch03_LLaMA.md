@@ -1,7 +1,7 @@
 
 ## LLaMA（Large Language Model Meta AI）
 
-![IMG_0011.png](Large%20Language%20Models%20(LLM)%20&%20Neural%20Language%20Proc/IMG_0011.png)
+![IMG_0011.png](LLaMA架构图.png)
 
 ### 词嵌入（Embedding）
 
@@ -25,12 +25,12 @@ $$
 - 均方根归一化后，对Q和K矩阵的每行向量从左往右两两一对（一偶数索引和一奇数索引）作为分量，与旋转矩阵做矩阵乘法，得到旋转后的向量（即旋转位置编码），后续无需再和输入数据求和
 - 旋转矩阵：以超参数指定旋转角度，自动计算旋转矩阵具体数值
     
-    $$
-    二维绕原点逆时针旋转矩阵\begin{bmatrix}
-     cos(\theta_i) & -sin(\theta_i) \\
-     sin(\theta_i) & cos(\theta_i)
-    \end{bmatrix}
-    $$
+$$
+二维绕原点逆时针旋转矩阵\begin{bmatrix}
+cos(\theta_i) & -sin(\theta_i) \\
+sin(\theta_i) & cos(\theta_i)
+\end{bmatrix}
+$$
     
 
 ### KV缓存
@@ -55,9 +55,9 @@ $$
     - 当数据输入神经网络输入层后，会分成两路（类似立体双隐藏层并行结构），得到两个计算值a和b，最终a和b逐元素相乘得到激活后的值
     - 门控机制和LSTM的门控机制原理一致，对输入数据信息选择性放行
     
-    $$
-    GLU(x)=a\odot sigmoid(b)=(xW_a+b_a)\odot sigmoid(xW_b+b_b)
-    $$
+$$
+GLU(x)=a\odot sigmoid(b)=(xW_a+b_a)\odot sigmoid(xW_b+b_b)
+$$
     
 - SwiGLU
     - 当数据输入神经网络输入层后，会分成两路（类似立体双隐藏层并行结构），得到两个计算值a和b，然后b通过Swish激活函数先行计算后，再和a作逐元素相乘得到最终激活后的值
