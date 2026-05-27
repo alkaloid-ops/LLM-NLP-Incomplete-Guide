@@ -1,10 +1,10 @@
-# 📘 大语言模型（LLM）与自然语言处理（NLP）从原理到实战
+# 📘 大语言模型（LLM）与自然语言处理（NLP）不完全指南
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-1.9%2B-red)
 
-> 深入浅出讲解大语言模型底层架构、Transformer 核心机制、LLaMA 优化技术及 NLP 基础算法。公式推导 + PyTorch 代码实现，从零构建自己的 GPT / BERT / T5。
+> 解析大语言模型底层架构、Transformer 核心机制、LLaMA 优化技术及 NLP 基础算法。公式推导 + PyTorch 代码实现，从零构建自己的 GPT / BERT / T5。
 
 ## 📌 简介
 
