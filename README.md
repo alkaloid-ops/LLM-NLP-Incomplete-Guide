@@ -41,5 +41,5 @@ pip install torch torchvision torchaudio transformers tokenizers sentencepiece t
 
 ## 🤝 贡献
 
-欢迎提交 Issue 或 PR 以修正错误、补充新内容（如 MoE、RLHF、量化推理等）。  
+欢迎提交 Issue 或 PR 以修正错误、补充内容。  
 如果本笔记对您有帮助，请点亮 ⭐ Star 支持一下～
